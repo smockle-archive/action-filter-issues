@@ -51,7 +51,8 @@ describe("FilterIssues", () => {
         });
         expect(issueNumbers).toEqual("");
     });
-    test("excludes an overly-restrictive set => 0 matches", async () => {
+    // Skipping: Newly-opened issues/PRs may cause this to flake.
+    test.skip("excludes an overly-restrictive set => 0 matches", async () => {
         const issueNumbers = await filterIssues({
             client,
             owner,

@@ -28,6 +28,12 @@ Output a space-delimited list of issues matching the specified criteria.
 
 **Required** A [GitHub token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) with the `public_repo` (for use in public repos) or `repo` (for use in private repos) scope.
 
+### Outputs
+
+#### `issue_numbers`
+
+A string-delimited list of matched issue numbers.
+
 ### Example workflow
 
 ```YAML
