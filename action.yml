@@ -1,0 +1,22 @@
+name: "action-filter-issues"
+author: "smockle"
+description: "Output a space-delimited list of issues matching the specified criteria."
+inputs:
+  owner:
+    description: "The owner of the repo containing the issues to filter. This is a GitHub username if the repo is user-owned, or a GitHub org name if the repo is org-owned."
+    required: false
+  repo:
+    description: "The name of the repo containing the issues to filter."
+    required: false
+  included_labels:
+    description: "A JSON-stringified list of every label matched issues must include."
+    required: false
+  excluded_labels:
+    description: "A JSON-stringified list of any labels matched issues must not include."
+    required: false
+runs:
+  using: "docker"
+  image: "Dockerfile"
+branding:
+  icon: "filter"
+  color: "blue"
