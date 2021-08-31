@@ -45,8 +45,10 @@ import { filterIssues } from "./lib/filter-issues";
         JSON.parse(core.getInput("included_labels", { required: true }) || "[]")
       );
     } catch (error) {
+      const originalErrorMessage =
+        error instanceof Error ? error.message : error;
       throw new Error(
-        `Failed to retrieve input 'included_labels' with error: ${error.message}. Is the input a valid JSON string?`
+        `Failed to retrieve input 'included_labels' with error: ${originalErrorMessage}. Is the input a valid JSON string?`
       );
     }
     /** A set of any label matched issues must not include. For example, `'["wip","draft","proposal"]'`. */
@@ -56,8 +58,10 @@ import { filterIssues } from "./lib/filter-issues";
         JSON.parse(core.getInput("excluded_labels", { required: true }) || "[]")
       );
     } catch (error) {
+      const originalErrorMessage =
+        error instanceof Error ? error.message : error;
       throw new Error(
-        `Failed to retrieve input 'excluded_labels' with error: ${error.message}. Is the input a valid JSON string?`
+        `Failed to retrieve input 'excluded_labels' with error: ${originalErrorMessage}. Is the input a valid JSON string?`
       );
     }
 
@@ -74,6 +78,10 @@ import { filterIssues } from "./lib/filter-issues";
     });
     core.setOutput("issue_numbers", issueNumbers);
   } catch (error) {
-    core.setFailed(error.message);
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : `A top-level error occurred: ${error}`;
+    core.setFailed(errorMessage);
   }
 })();
