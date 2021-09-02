@@ -1,5 +1,6 @@
 import type { getOctokit } from "@actions/github";
 export type Client = ReturnType<typeof getOctokit>;
+type Unwrapped<T> = T extends Promise<infer U> ? U : never;
 
 interface FilterIssuesParameters {
   /** An authenticated GitHub API client. */
@@ -26,13 +27,26 @@ export async function filterIssues({
   excludedLabels = [],
 }: FilterIssuesParameters): Promise<string> {
   // Retrieve issues with all `includedLabels`.
-  const issues = (
-    await client.rest.issues.listForRepo({
-      owner,
-      repo,
-      labels: includedLabels.length > 0 ? includedLabels.join(",") : undefined,
-    })
-  )?.data;
+  let issues: Unwrapped<
+    ReturnType<typeof client.rest.issues.listForRepo>
+  >["data"] = [];
+  let pageIndex = 1;
+  while (true) {
+    const additionalIssues = (
+      await client.rest.issues.listForRepo({
+        owner,
+        repo,
+        labels:
+          includedLabels.length > 0 ? includedLabels.join(",") : undefined,
+        page: pageIndex++,
+      })
+    )?.data;
+    if (!additionalIssues || additionalIssues.length === 0) {
+      break;
+    } else {
+      issues = issues.concat(additionalIssues);
+    }
+  }
 
   // Match issues labeled without any `excludedLabels`.
   // Sort (for easier testing), convert to strings (implicitly), and space-delimit.

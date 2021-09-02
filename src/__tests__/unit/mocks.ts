@@ -37,9 +37,10 @@ export async function listForRepoMock(
       const labels = issue.labels.map(({ name }) => name);
       return includedLabels.every((l) => labels.includes(l));
     })
+    .sort(({ number: a }, { number: b }) => a - b)
     .reduce((pages, issue, issueIndex) => {
       const pageIndex = Math.floor(issueIndex / perPage);
-      pages[pageIndex] = (pages[pageIndex] ?? []).concat([issue]);
+      pages[pageIndex] = (pages[pageIndex] ?? []).concat(issue);
       return pages;
     }, [] as Array<Array<GetIssuesResponse["data"][0]>>);
   const response = {
@@ -48,8 +49,6 @@ export async function listForRepoMock(
   };
   return Promise.resolve(response);
 }
-listForRepoMock.defaults = undefined as any;
-listForRepoMock.endpoint = undefined as any;
 
 // Client
 
@@ -59,7 +58,11 @@ export const client = {
       listForRepo: listForRepoMock,
     },
   },
-} as Client;
+} as Client & { reset: () => void };
+client.reset = () => {
+  client.rest.issues.listForRepo =
+    listForRepoMock as Client["rest"]["issues"]["listForRepo"];
+};
 
 // Counter
 
