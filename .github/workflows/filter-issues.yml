@@ -8,13 +8,14 @@ jobs:
     name: Filter bugs
     runs-on: ubuntu-latest
     steps:
-      - id: filter_bugs
-        uses: smockle/action-filter-issues@dist
-        with:
-          owner: smockle
-          repo: action-filter-issues
-          included_labels: '["bug"]'
-          excluded_labels: '["wip"]'
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      - run: echo ${{ steps.filter_bugs.outputs.issue_numbers }}
+      - run: echo ${{ github.context.payload.repository }}
+      # - id: filter_bugs
+      #   uses: smockle/action-filter-issues@dist
+      #   with:
+      #     owner: smockle
+      #     repo: action-filter-issues
+      #     included_labels: '["bug"]'
+      #     excluded_labels: '["wip"]'
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      # - run: echo ${{ steps.filter_bugs.outputs.issue_numbers }}
