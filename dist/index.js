@@ -44,7 +44,7 @@ import { filterIssues } from "./lib/filter-issues";
         // Retrieve an authenticated client
         const client = github.getOctokit(token);
         // Filter issues matching the specified criteria.
-        const issueNumbers = filterIssues({
+        const issueNumbers = await filterIssues({
             client,
             owner,
             repo,
