@@ -8,7 +8,7 @@ jobs:
     name: Filter bugs
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ github.context.payload.repository }}
+      - run: echo ${{ github.repository }}
       # - id: filter_bugs
       #   uses: smockle/action-filter-issues@dist
       #   with:
