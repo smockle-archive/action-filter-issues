@@ -1,10 +1,21 @@
 export async function filterIssues({ client, owner, repo, includedLabels = [], excludedLabels = [], }) {
     // Retrieve issues with all `includedLabels`.
-    const issues = (await client.rest.issues.listForRepo({
-        owner,
-        repo,
-        labels: includedLabels.length > 0 ? includedLabels.join(",") : undefined,
-    }))?.data;
+    let issues = [];
+    let pageIndex = 1;
+    while (true) {
+        const additionalIssues = (await client.rest.issues.listForRepo({
+            owner,
+            repo,
+            labels: includedLabels.length > 0 ? includedLabels.join(",") : undefined,
+            page: pageIndex++,
+        }))?.data;
+        if (!additionalIssues || additionalIssues.length === 0) {
+            break;
+        }
+        else {
+            issues = issues.concat(additionalIssues);
+        }
+    }
     // Match issues labeled without any `excludedLabels`.
     // Sort (for easier testing), convert to strings (implicitly), and space-delimit.
     const issueNumbers = issues

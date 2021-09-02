@@ -24,9 +24,10 @@ export async function listForRepoMock(params) {
         const labels = issue.labels.map(({ name }) => name);
         return includedLabels.every((l) => labels.includes(l));
     })
+        .sort(({ number: a }, { number: b }) => a - b)
         .reduce((pages, issue, issueIndex) => {
         const pageIndex = Math.floor(issueIndex / perPage);
-        pages[pageIndex] = (pages[pageIndex] ?? []).concat([issue]);
+        pages[pageIndex] = (pages[pageIndex] ?? []).concat(issue);
         return pages;
     }, []);
     const response = {
@@ -35,8 +36,6 @@ export async function listForRepoMock(params) {
     };
     return Promise.resolve(response);
 }
-listForRepoMock.defaults = undefined;
-listForRepoMock.endpoint = undefined;
 // Client
 export const client = {
     rest: {
@@ -44,6 +43,10 @@ export const client = {
             listForRepo: listForRepoMock,
         },
     },
+};
+client.reset = () => {
+    client.rest.issues.listForRepo =
+        listForRepoMock;
 };
 class Counter {
     #initialCount = {
