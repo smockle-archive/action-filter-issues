@@ -24,15 +24,27 @@ export async function listForRepoMock(
   const path: url.URL = new URL("./getIssuesResponse.json", import.meta.url);
   const unparsedResponse = await readFile(path, "utf8");
   const unfilteredResponse: GetIssuesResponse = JSON.parse(unparsedResponse);
+  // ref: https://docs.github.com/en/rest/reference/issues#list-issues-assigned-to-the-authenticated-user--parameters
   // Retrieve labels from request params
-  const includedLabels = params.labels?.split(",") || [];
-  // Filter the response
-  const response = {
-    ...unfilteredResponse,
-    data: unfilteredResponse.data.filter((issue) => {
+  const includedLabels = params.labels?.split(",") ?? [];
+  // Retrieve paging info from request params
+  const perPage = params.per_page ?? 30;
+  const page = params.page ?? 1;
+  // Filter non-matching issues from the mock data, then
+  // group the remaining issues into pages
+  const pages = unfilteredResponse.data
+    .filter((issue) => {
       const labels = issue.labels.map(({ name }) => name);
       return includedLabels.every((l) => labels.includes(l));
-    }),
+    })
+    .reduce((pages, issue, issueIndex) => {
+      const pageIndex = Math.floor(issueIndex / perPage);
+      pages[pageIndex] = (pages[pageIndex] ?? []).concat([issue]);
+      return pages;
+    }, [] as Array<Array<GetIssuesResponse["data"][0]>>);
+  const response = {
+    ...unfilteredResponse,
+    data: pages[page - 1] ?? [],
   };
   return Promise.resolve(response);
 }
