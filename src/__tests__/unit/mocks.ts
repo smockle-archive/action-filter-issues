@@ -10,16 +10,30 @@ const { URL } = url;
 
 // GET /repos/{owner}/{repo}/issues
 
+type GetIssuesRequestParams =
+  RestEndpointMethodTypes["issues"]["listForRepo"]["parameters"];
 type GetIssuesResponse =
   RestEndpointMethodTypes["issues"]["listForRepo"]["response"];
 
-export async function listForRepoMock(): Promise<GetIssuesResponse> {
+export async function listForRepoMock(
+  params: GetIssuesRequestParams
+): Promise<GetIssuesResponse> {
   // Track the number of times 'listForRepoMock' has been called.
   counter.rest.issues.listForRepo++;
   // Return mock data read from a file.
   const path: url.URL = new URL("./getIssuesResponse.json", import.meta.url);
   const unparsedResponse = await readFile(path, "utf8");
-  const response: GetIssuesResponse = JSON.parse(unparsedResponse);
+  const unfilteredResponse: GetIssuesResponse = JSON.parse(unparsedResponse);
+  // Retrieve labels from request params
+  const includedLabels = params.labels?.split(",") || [];
+  // Filter the response
+  const response = {
+    ...unfilteredResponse,
+    data: unfilteredResponse.data.filter((issue) => {
+      const labels = issue.labels.map(({ name }) => name);
+      return includedLabels.every((l) => labels.includes(l));
+    }),
+  };
   return Promise.resolve(response);
 }
 listForRepoMock.defaults = undefined as any;
