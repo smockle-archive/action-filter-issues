@@ -1,3 +1,5 @@
+/** Number of issues to retrieve per page. Increasing this from 30 (the default) to 100 (the max) in order to decrease the number of requests. Docs: https://docs.github.com/en/rest/reference/issues#list-repository-issues--parameters */
+const perPage = 100;
 export async function filterIssues({ client, owner, repo, includedLabels = [], excludedLabels = [], }) {
     // Retrieve issues with all `includedLabels`.
     let issues = [];
@@ -8,6 +10,7 @@ export async function filterIssues({ client, owner, repo, includedLabels = [], e
             repo,
             labels: includedLabels.length > 0 ? includedLabels.join(",") : undefined,
             page: pageIndex++,
+            per_page: perPage,
         }))?.data;
         if (!additionalIssues || additionalIssues.length === 0) {
             break;
