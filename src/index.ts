@@ -39,7 +39,7 @@ import { filterIssues } from "./lib/filter-issues";
     let includedLabels: Set<string>;
     try {
       includedLabels = new Set(
-        JSON.parse(core.getInput("included_labels", { required: true }) || "[]")
+        JSON.parse(core.getInput("included_labels") || "[]")
       );
     } catch (error) {
       const originalErrorMessage =
@@ -52,7 +52,7 @@ import { filterIssues } from "./lib/filter-issues";
     let excludedLabels: Set<string>;
     try {
       excludedLabels = new Set(
-        JSON.parse(core.getInput("excluded_labels", { required: true }) || "[]")
+        JSON.parse(core.getInput("excluded_labels") || "[]")
       );
     } catch (error) {
       const originalErrorMessage =
