@@ -26,7 +26,7 @@ import { filterIssues } from "./lib/filter-issues";
         /** A set of every label matched issues must include. For example, `'["bug","enhancement"]'`. */
         let includedLabels;
         try {
-            includedLabels = new Set(JSON.parse(core.getInput("included_labels", { required: true }) || "[]"));
+            includedLabels = new Set(JSON.parse(core.getInput("included_labels") || "[]"));
         }
         catch (error) {
             const originalErrorMessage = error instanceof Error ? error.message : error;
@@ -35,7 +35,7 @@ import { filterIssues } from "./lib/filter-issues";
         /** A set of any label matched issues must not include. For example, `'["wip","draft","proposal"]'`. */
         let excludedLabels;
         try {
-            excludedLabels = new Set(JSON.parse(core.getInput("excluded_labels", { required: true }) || "[]"));
+            excludedLabels = new Set(JSON.parse(core.getInput("excluded_labels") || "[]"));
         }
         catch (error) {
             const originalErrorMessage = error instanceof Error ? error.message : error;
