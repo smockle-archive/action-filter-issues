@@ -56,7 +56,9 @@ export async function filterIssues({
   // Sort (for easier testing), convert to strings (implicitly), and space-delimit.
   const issueNumbers: string = issues
     .reduce((issueNumbers, issue) => {
-      const labels = issue.labels.map(({ name }) => name);
+      const labels = issue.labels.map((label) =>
+        typeof label === "string" ? label : label.name
+      );
       if (!excludedLabels.some((l) => labels.includes(l))) {
         issueNumbers.push(issue.number);
       }
