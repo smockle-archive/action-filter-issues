@@ -21,7 +21,7 @@ export async function listForRepoMock(params) {
     // group the remaining issues into pages
     const pages = unfilteredResponse.data
         .filter((issue) => {
-        const labels = issue.labels.map(({ name }) => name);
+        const labels = issue.labels.map((label) => typeof label === "string" ? label : label.name);
         return includedLabels.every((l) => labels.includes(l));
     })
         .sort(({ number: a }, { number: b }) => a - b)
