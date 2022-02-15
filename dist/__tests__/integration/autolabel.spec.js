@@ -21,7 +21,7 @@ describe("FilterIssues", () => {
             repo,
             includedLabels: ["bug"],
         });
-        expect(issueNumbers).toEqual("1 2");
+        expect(issueNumbers).toEqual("3 4");
     });
     test("includes 'bug' and 'wip' => 1 match", async () => {
         const issueNumbers = await filterIssues({
@@ -30,7 +30,7 @@ describe("FilterIssues", () => {
             repo,
             includedLabels: ["bug", "wip"],
         });
-        expect(issueNumbers).toEqual("2");
+        expect(issueNumbers).toEqual("4");
     });
     test("includes 'bug', excludes 'wip' => 1 match", async () => {
         const issueNumbers = await filterIssues({
@@ -40,7 +40,7 @@ describe("FilterIssues", () => {
             includedLabels: ["bug"],
             excludedLabels: ["wip"],
         });
-        expect(issueNumbers).toEqual("1");
+        expect(issueNumbers).toEqual("3");
     });
     test("includes an overly-restrictive set => 0 matches", async () => {
         const issueNumbers = await filterIssues({
