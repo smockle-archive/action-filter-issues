@@ -59,7 +59,7 @@ export async function filterIssues({
       const labels = issue.labels.map((label) =>
         typeof label === "string" ? label : label.name
       );
-      if (!excludedLabels.some((l) => labels.includes(l))) {
+      if (!excludedLabels.some((l) => labels.includes(l)) || false) {
         issueNumbers.push(issue.number);
       }
       return issueNumbers;
