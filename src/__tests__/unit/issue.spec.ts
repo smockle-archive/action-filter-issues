@@ -21,7 +21,7 @@ describe("FilterIssues", () => {
       repo,
       includedLabels: ["bug"],
     });
-    expect(issueNumbers).toEqual("1 2");
+    expect(issueNumbers).toEqual("3 4");
     expect(counter.rest.issues.listForRepo).toEqual(2);
   });
 
@@ -39,7 +39,7 @@ describe("FilterIssues", () => {
       repo,
       includedLabels: ["bug"],
     });
-    expect(issueNumbers).toEqual("1 2");
+    expect(issueNumbers).toEqual("3 4");
     expect(counter.rest.issues.listForRepo).toEqual(3);
   });
 
@@ -50,7 +50,7 @@ describe("FilterIssues", () => {
       repo,
       includedLabels: ["bug", "wip"],
     });
-    expect(issueNumbers).toEqual("2");
+    expect(issueNumbers).toEqual("4");
     expect(counter.rest.issues.listForRepo).toEqual(2);
   });
 
@@ -62,7 +62,7 @@ describe("FilterIssues", () => {
       includedLabels: ["bug"],
       excludedLabels: ["wip"],
     });
-    expect(issueNumbers).toEqual("1");
+    expect(issueNumbers).toEqual("3");
     expect(counter.rest.issues.listForRepo).toEqual(2);
   });
 
